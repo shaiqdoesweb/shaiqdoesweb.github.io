@@ -660,12 +660,12 @@ footer{background:var(--ink);color:#aab2b9;padding:1.6rem 0 calc(1.6rem + env(sa
 <section class="sec contact" id="contact">
   <div class="wrap">
     <h2>Send me your website link.</h2>
-    <p>I'll reply within 24 hours with your one-page audit. No sales call needed.</p>
+    <p>You'll get an instant confirmation the moment you hit send, then your one-page audit within 24 hours. No sales call needed.</p>
     <div class="form-wrap">
       <div>
         <ul class="why">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="#14171A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Free, no obligation</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="#14171A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Reply within 24 hours</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#14171A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Instant confirmation email, full audit within 24 hours</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="#14171A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>No website yet? Tell me your business name instead</li>
         </ul>
         <p class="fine" style="margin-top:1.6rem">Prefer not to use the form? <a href="mailto:muhammadshaiq77@gmail.com" style="text-decoration:underline">Email me directly</a> or <a href="https://instagram.com/shaiqdoesweb" style="text-decoration:underline">message me on Instagram</a>.</p>
@@ -708,8 +708,29 @@ footer{background:var(--ink);color:#aab2b9;padding:1.6rem 0 calc(1.6rem + env(sa
 
 <div class="sticky" id="sticky"><a class="btn yellow" href="#contact" data-goto-form>Get my free audit</a></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
 (function(){
+  /* =========================================================
+     MASTER TEMPLATE CONFIG — SPEED-TO-LEAD SYSTEM
+     Everything client-specific lives here. To deploy this
+     system for a new client: change ONLY the values in this
+     block, then re-upload. Nothing below this block should
+     need to change per client.
+     ========================================================= */
+  var LEAD_CONFIG = {
+    businessName:      'Shaiq A.',                 // shown in the confirmation email
+    senderSignOff:     'Shaiq',                     // how the email signs off
+    emailjsServiceId:  'service_puex57g',
+    emailjsTemplateId: 'template_vpvivab',
+    emailjsPublicKey:  'GmHXjqhspnch0Z3bB',
+    slaText:           'within 24 hours'             // how the follow-up promise is phrased
+  };
+
+  if (window.emailjs && LEAD_CONFIG.emailjsPublicKey) {
+    emailjs.init({ publicKey: LEAD_CONFIG.emailjsPublicKey });
+  }
+
   /* ----- hero phone demo ----- */
   var chat=document.getElementById('chat'), verdict=document.getElementById('verdict');
   var tabs=document.querySelectorAll('.seg button');
@@ -875,6 +896,22 @@ footer{background:var(--ink);color:#aab2b9;padding:1.6rem 0 calc(1.6rem + env(sa
         message: form.message.value.trim() || 'No extra details provided.'
       };
 
+      // Instant lead-facing auto-reply (best-effort: never blocks or breaks
+      // the main submission if EmailJS is slow, down, or over its free quota)
+      if (window.emailjs && LEAD_CONFIG.emailjsServiceId) {
+        emailjs.send(LEAD_CONFIG.emailjsServiceId, LEAD_CONFIG.emailjsTemplateId, {
+          to_name: nameVal,
+          to_email: emailVal,
+          business_name: LEAD_CONFIG.businessName,
+          sender_signoff: LEAD_CONFIG.senderSignOff,
+          sla_text: LEAD_CONFIG.slaText,
+          website: payload.website,
+          message: payload.message
+        }).catch(function(err){
+          console.warn('Auto-reply email did not send (lead capture is unaffected):', err);
+        });
+      }
+
       fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -884,7 +921,7 @@ footer{background:var(--ink);color:#aab2b9;padding:1.6rem 0 calc(1.6rem + env(sa
       .then(function(result){
         if (result.ok && result.data && result.data.success) {
           form.reset();
-          setStatus('ok', "Thanks! I've got your request and will reply within 24 hours. Check your spam folder if you don't see anything by then.");
+          setStatus('ok', "Got it — check your inbox for an instant confirmation. I'll send your full audit " + LEAD_CONFIG.slaText + ". Check spam if you don't see the confirmation in a minute or two.");
         } else {
           setStatus('err', "That didn't go through. Please try again, or email muhammadshaiq77@gmail.com directly.");
         }
