@@ -8,7 +8,7 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'G-XXXXXXXXXX');
+    gtag('config', 'G-T96QWQ9NY1');
   </script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1148,7 +1148,7 @@ h3 { font-size: 1.2rem; }
   });
 
 /* Form */
-  if (window.emailjs && LEAD_CONFIG.emailjsPublicKey){
+if (window.emailjs && LEAD_CONFIG.emailjsPublicKey){
     try { emailjs.init({ publicKey: LEAD_CONFIG.emailjsPublicKey }); } catch(e){}
   }
   var form = document.getElementById('audit-form');
@@ -1203,6 +1203,16 @@ h3 { font-size: 1.2rem; }
         if (result.ok && result.data && result.data.success){
           form.reset();
           setStatus('ok', "Got it — check your inbox for confirmation. Full audit " + LEAD_CONFIG.slaText + ".");
+          
+          // ====== CHANGE ADDED HERE: GA4 Lead Conversion Tracking ======
+          if (typeof gtag === 'function') {
+            gtag('event', 'generate_lead', {
+              'event_category': 'audit_form',
+              'event_label': 'Free Audit Request'
+            });
+          }
+          // ==============================================================
+
         } else {
           setStatus('err', "That didn't go through. Try again or email muhammadshaiq77@gmail.com.");
         }
