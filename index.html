@@ -68,6 +68,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" media="print" onload="this.media='all'" />
 <noscript>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" />
+  <link rel="preload" as="image" href="/shaiq-headshot.webp" type="image/webp">
 </noscript>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
@@ -684,7 +685,7 @@ h3 { font-size: 1.2rem; }
       </div>
     </div>
     <div class="hero-card reveal">
-      <img class="hero-photo" src="shaiq-headshot.webp" alt="Shaiq A." width="120" height="120">
+      <img class="hero-photo" src="shaiq-headshot.webp" alt="Shaiq A." width="120" height="120" fetchpriority="high">
       <h3>Shaiq A.</h3>
       <p class="role">Websites & lead systems for local contractors</p>
       <div class="hero-pills">
